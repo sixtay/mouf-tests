@@ -635,6 +635,30 @@ return new \\Doctrine\\Common\\Annotations\\CachedReader($reader, $container->ge
       'fallback' => 'fileCacheService',
     ),
   ),
+  'blankWebLibrary' => 
+  array (
+    'class' => 'Mouf\\Html\\Utils\\WebLibraryManager\\WebLibrary',
+    'external' => false,
+    'weak' => false,
+  ),
+  'blankWebLibraryManager' => 
+  array (
+    'class' => 'Mouf\\Html\\Utils\\WebLibraryManager\\WebLibraryManager',
+    'external' => false,
+    'weak' => false,
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'defaultRenderer',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+  ),
   'block.content' => 
   array (
     'class' => 'Mouf\\Html\\HtmlElement\\HtmlBlock',
@@ -722,9 +746,66 @@ return new \\Doctrine\\Common\\Annotations\\CachedReader($reader, $container->ge
       'setRight' => 'block.right',
       'setHeader' => 'block.header',
       'setFooter' => 'block.footer',
-      'setWebLibraryManager' => 'defaultWebLibraryManager',
       'setTemplateRenderer' => 'bootstrapRenderer',
       'setDefaultRenderer' => 'defaultRenderer',
+      'setWebLibraryManager' => 'cleanWebLibraryManager',
+    ),
+    'setterProperties' => 
+    array (
+    ),
+  ),
+  'brandController' => 
+  array (
+    'class' => 'MoufTest\\Controllers\\BrandController',
+    'external' => false,
+    'weak' => false,
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'psr.errorLogLogger',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      1 => 
+      array (
+        'value' => 'bootstrapTemplate',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      2 => 
+      array (
+        'value' => 'block.content',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      3 => 
+      array (
+        'value' => 'daoFactory',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      4 => 
+      array (
+        'value' => 'twigEnvironment',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
     ),
   ),
   'brandDao' => 
@@ -736,6 +817,60 @@ return new \\Doctrine\\Common\\Annotations\\CachedReader($reader, $container->ge
       0 => 
       array (
         'value' => 'tdbmService',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  'carController' => 
+  array (
+    'class' => 'MoufTest\\Controllers\\CarController',
+    'external' => false,
+    'weak' => false,
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'psr.errorLogLogger',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      1 => 
+      array (
+        'value' => 'bootstrapTemplate',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      2 => 
+      array (
+        'value' => 'block.content',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      3 => 
+      array (
+        'value' => 'daoFactory',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      4 => 
+      array (
+        'value' => 'twigEnvironment',
         'parametertype' => 'object',
         'type' => 'string',
         'metadata' => 
@@ -759,6 +894,35 @@ return new \\Doctrine\\Common\\Annotations\\CachedReader($reader, $container->ge
         array (
         ),
       ),
+    ),
+  ),
+  'cleanWebLibraryManager' => 
+  array (
+    'class' => 'Mouf\\Html\\Utils\\WebLibraryManager\\WebLibraryManager',
+    'external' => false,
+    'weak' => false,
+    'setterBinds' => 
+    array (
+      'setWebLibraries' => 
+      array (
+        0 => 'rootUrlInlineWebLibrary',
+        1 => 'messageServiceLibrary',
+      ),
+    ),
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'defaultRenderer',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+    'setterProperties' => 
+    array (
     ),
   ),
   'component.bootstrap' => 
@@ -1095,6 +1259,37 @@ return $driver;
       ),
     ),
   ),
+  'emptyWebLibraryManager' => 
+  array (
+    'class' => 'Mouf\\Html\\Utils\\WebLibraryManager\\WebLibraryManager',
+    'external' => false,
+    'weak' => false,
+    'setterBinds' => 
+    array (
+      'setWebLibraries' => 
+      array (
+        0 => 'rootUrlInlineWebLibrary',
+        1 => 'messageServiceLibrary',
+        2 => 'component.jquery',
+        3 => NULL,
+      ),
+    ),
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'defaultRenderer',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+    'setterProperties' => 
+    array (
+    ),
+  ),
   'fileCacheService' => 
   array (
     'class' => 'Mouf\\Utils\\Cache\\FileCache',
@@ -1114,6 +1309,33 @@ return $driver;
       array (
         'value' => 'SECRET',
         'type' => 'config',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+  ),
+  'fooController' => 
+  array (
+    'class' => 'MoufTest\\Controllers\\FooController',
+    'external' => false,
+    'weak' => false,
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'psr.errorLogLogger',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      1 => 
+      array (
+        'value' => 'daoFactory',
+        'parametertype' => 'object',
+        'type' => 'string',
         'metadata' => 
         array (
         ),
@@ -1892,6 +2114,20 @@ return rtrim(sys_get_temp_dir(), '/\\').'/mouftwigtemplatemain_'.$posixGetuid.st
 	 }
 
 	/**
+	 * @return Mouf\Html\Utils\WebLibraryManager\WebLibrary
+	 */
+	 public static function getBlankWebLibrary() {
+	 	return MoufManager::getMoufManager()->get('blankWebLibrary');
+	 }
+
+	/**
+	 * @return Mouf\Html\Utils\WebLibraryManager\WebLibraryManager
+	 */
+	 public static function getBlankWebLibraryManager() {
+	 	return MoufManager::getMoufManager()->get('blankWebLibraryManager');
+	 }
+
+	/**
 	 * @return Mouf\Html\HtmlElement\HtmlBlock
 	 */
 	 public static function getBlock_content() {
@@ -1941,6 +2177,13 @@ return rtrim(sys_get_temp_dir(), '/\\').'/mouftwigtemplatemain_'.$posixGetuid.st
 	 }
 
 	/**
+	 * @return MoufTest\Controllers\BrandController
+	 */
+	 public static function getBrandController() {
+	 	return MoufManager::getMoufManager()->get('brandController');
+	 }
+
+	/**
 	 * @return MoufTest\Model\Dao\BrandDao
 	 */
 	 public static function getBrandDao() {
@@ -1948,10 +2191,24 @@ return rtrim(sys_get_temp_dir(), '/\\').'/mouftwigtemplatemain_'.$posixGetuid.st
 	 }
 
 	/**
+	 * @return MoufTest\Controllers\CarController
+	 */
+	 public static function getCarController() {
+	 	return MoufManager::getMoufManager()->get('carController');
+	 }
+
+	/**
 	 * @return MoufTest\Model\Dao\CarDao
 	 */
 	 public static function getCarDao() {
 	 	return MoufManager::getMoufManager()->get('carDao');
+	 }
+
+	/**
+	 * @return Mouf\Html\Utils\WebLibraryManager\WebLibraryManager
+	 */
+	 public static function getCleanWebLibraryManager() {
+	 	return MoufManager::getMoufManager()->get('cleanWebLibraryManager');
 	 }
 
 	/**
@@ -2053,10 +2310,24 @@ return rtrim(sys_get_temp_dir(), '/\\').'/mouftwigtemplatemain_'.$posixGetuid.st
 	 }
 
 	/**
+	 * @return Mouf\Html\Utils\WebLibraryManager\WebLibraryManager
+	 */
+	 public static function getEmptyWebLibraryManager() {
+	 	return MoufManager::getMoufManager()->get('emptyWebLibraryManager');
+	 }
+
+	/**
 	 * @return Mouf\Utils\Cache\FileCache
 	 */
 	 public static function getFileCacheService() {
 	 	return MoufManager::getMoufManager()->get('fileCacheService');
+	 }
+
+	/**
+	 * @return MoufTest\Controllers\FooController
+	 */
+	 public static function getFooController() {
+	 	return MoufManager::getMoufManager()->get('fooController');
 	 }
 
 	/**
