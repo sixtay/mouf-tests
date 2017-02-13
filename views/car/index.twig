@@ -24,7 +24,7 @@
             <h4>{[{alertMassege}]}</h4>
           </div>
           <form class="form-inline">
-            <input class="form-control" ng-model="search" type="text"
+            <input class="form-control" ng-model="search" ng-model-options='{ debounce: 1000 }' type="text"
               placeholder="Filter by" autofocus>
           </form>                      
           <table class="table table-bordered myTable">
@@ -38,8 +38,8 @@
               <th>Delete</th>
             </tr>
             <tbody>
-              <tr ng-repeat="car in cars | filter:search">
-                <td>{[{$index+1}]}</td>
+              <tr ng-repeat="car in filteredCars | filter:search">
+                <td>{[{car.id}]}</td>
                 <td>{[{car.brand.name}]}</td>
                 <td>{[{car.name}]}</td>
                 <td>{[{car.maxSpeed}]}</td>
@@ -53,6 +53,9 @@
             </tbody>
           </table>
         </div>
+      </div>
+      <div class="row">
+        <ul uib-pagination total-items="cars.length" ng-model="currentPage" items-per-page="numPerPage"></ul>
       </div>
     </div>
     <div class="container footer">
@@ -169,8 +172,9 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.5.1/restangular.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
     <script type="text/javascript">
-      var myApp = angular.module('myApp', ['restangular']);
+      var myApp = angular.module('myApp', ['restangular', 'ui.bootstrap']);
   myApp.config(function($interpolateProvider){
       $interpolateProvider.startSymbol("{[{").endSymbol("}]}");
     })
@@ -190,15 +194,46 @@
           return extractedData;
       });      
 
+  })
+    .filter('searchFor', function(){
+    return function(arr, searchString){
+        if(!searchString){
+            return arr;
+        }
+        var result = [];
+        searchString = searchString.toLowerCase();
+        Restangular.all('cars').getList().then(function (data) {
+          angular.forEach(arr, function(item){
+              if(item.title.toLowerCase().indexOf(searchString) !== -1){
+              result.push(item);
+          }
+          });          
+        })
+        return result;
+    };
 });
 myApp.controller("myController", function($scope, Restangular){
+    $scope.cars = [];
+    // $scope.totalItems = 6;
+    // $scope.carsLength = $scope.cars.length;
+     $scope.filteredCars = []
+    ,$scope.currentPage = 1
+    ,$scope.numPerPage = 2;
+    // ,$scope.maxSize = 5;
+
     var baseCars = Restangular.all('cars');    
     var baseBrands = Restangular.all('brand');    
     function cars_init() {
       baseCars.getList()
       .then(function(data) {
+        var begin = (($scope.currentPage - 1) * $scope.numPerPage)
+        , end = begin + $scope.numPerPage;
+        
+        
         $scope.cars = data;
-        // console.log($scope.cars);
+        // $scope.totalItems = $scope.cars.length;
+        $scope.filteredCars = $scope.cars.slice(begin, end);
+        console.log($scope);
       });
     }
 
@@ -274,7 +309,10 @@ myApp.controller("myController", function($scope, Restangular){
     $scope.clickedAlert = function(){
         $scope.alertMassege = "";
     };
-    
+
+     $scope.$watch('currentPage + numPerPage', function() {
+      cars_init()
+      });    
 });
     
     </script>
