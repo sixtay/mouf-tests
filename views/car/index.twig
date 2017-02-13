@@ -182,7 +182,7 @@
       $interpolateProvider.startSymbol("{[{").endSymbol("}]}");
     })
     .config(function(RestangularProvider) {
-      RestangularProvider.setBaseUrl('http://mouf.dev'); 
+      RestangularProvider.setBaseUrl('{{ base_url }}'); 
       RestangularProvider.setDefaultHeaders({
         "Content-Type": "application/json",
         "X-Requested-With": "XMLHttpRequest"

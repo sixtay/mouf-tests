@@ -76,6 +76,9 @@ class CarController {
     public function index() {
         // TODO: write content of action here
         //By default, we assume that it is not
+        $base_url = "http://" . $_SERVER['SERVER_NAME'];
+        // var_dump($base_url); die();
+        // var_dump($_SERVER); die();
         $carDao = \Mouf::getCarDao();
         $cars = $carDao->findAll();
         //an AJAX request.
@@ -93,7 +96,7 @@ class CarController {
         }
             // return new JsonResponse([ "status"=>"ok", "data" => json_decode(json_encode($cars))]);
 
-        $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/index.twig', array("message"=>"Chuka")));
+        $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/index.twig', array("base_url" =>$base_url)));
 
         return new HtmlResponse($this->template);
     }
