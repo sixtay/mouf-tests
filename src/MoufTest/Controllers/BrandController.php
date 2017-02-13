@@ -1,18 +1,19 @@
 <?php
 namespace MoufTest\Controllers;
 
+use MoufTest\Model\Dao\Generated\DaoFactory;
+use Mouf\Html\HtmlElement\HtmlBlock;
+use Mouf\Html\Renderer\Twig\TwigTemplate;
+use Mouf\Html\Template\TemplateInterface;
+use Mouf\Mvc\Splash\Annotations\Delete;
 use Mouf\Mvc\Splash\Annotations\Get;
 use Mouf\Mvc\Splash\Annotations\Post;
 use Mouf\Mvc\Splash\Annotations\Put;
-use Mouf\Mvc\Splash\Annotations\Delete;
 use Mouf\Mvc\Splash\Annotations\URL;
-use Mouf\Html\Template\TemplateInterface;
-use Mouf\Html\HtmlElement\HtmlBlock;
-use Psr\Log\LoggerInterface;
-use MoufTest\Model\Dao\Generated\DaoFactory;
-use \Twig_Environment;
-use Mouf\Html\Renderer\Twig\TwigTemplate;
 use Mouf\Mvc\Splash\HtmlResponse;
+use Psr\Log\LoggerInterface;
+use Zend\Diactoros\Response\JsonResponse;
+use \Twig_Environment;
 
 /**
  * TODO: write controller comment
@@ -74,7 +75,27 @@ class BrandController {
     public function index() {
         // TODO: write content of action here
         // var_dump($this->template); die();
+
+        $brandDao = \Mouf::getBrandDao();
+        $brands = $brandDao->findAll();
+        //an AJAX request.
+        $isAjaxRequest = false;
+         
+        if(
+            isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0
+        ){
+            $isAjaxRequest = true;
+        }        
+
+        if ($isAjaxRequest) {
+            return new JsonResponse([ "status"=>"ok", "data" => $brands]);
+        }
+  
+
         // Let's add the twig file to the template.
+
+
         $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/brand/index.twig', array("message"=>"world")));
 
         return new HtmlResponse($this->template);

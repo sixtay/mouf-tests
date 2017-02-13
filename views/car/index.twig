@@ -11,7 +11,7 @@
       <div class="row">
         <div class="col-md-12">
           <hr/>
-          <h3 class="text-center">Angular JS Crud App</h3>
+          <h3 class="text-center">Mouf Test</h3>
           <hr/>
         </div>
       </div>
@@ -23,9 +23,14 @@
           <div class="alert alert-warning fade in myAlert" ng-if="alertMassege"><a class="close" href="#" data-dismiss="alert" ng-click="clickedAlert()">×</a>
             <h4>{[{alertMassege}]}</h4>
           </div>
+          <form class="form-inline">
+            <input class="form-control" ng-model="search" type="text"
+              placeholder="Filter by" autofocus>
+          </form>                      
           <table class="table table-bordered myTable">
             <tr class="text-center">
               <th>Index</th>
+              <th>Brand</th>
               <th>Name</th>
               <th>Max Speed</th>
               <!-- <th>Email</th> -->
@@ -33,16 +38,16 @@
               <th>Delete</th>
             </tr>
             <tbody>
-              <tr ng-repeat="user in users">
+              <tr ng-repeat="car in cars | filter:search">
                 <td>{[{$index+1}]}</td>
-                <td>{[{user.name}]}</td>
-                <td>{[{user.fullname}]}</td>
-                <!-- <td>{[{user.email}]}</td> -->
+                <td>{[{car.brand.name}]}</td>
+                <td>{[{car.name}]}</td>
+                <td>{[{car.maxSpeed}]}</td>
                 <td>
-                  <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" ng-click="selectUser(user)">Edit</button>
+                  <button class="btn btn-warning" data-toggle="modal" data-target="#editModal" ng-click="selectCar(car)">Edit</button>
                 </td>
                 <td>
-                  <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" ng-click="selectUser(user)">Delete</button>
+                  <button class="btn btn-danger" data-toggle="modal" data-target="#deleteModal" ng-click="selectCar(car)">Delete</button>
                 </td>
               </tr>
             </tbody>
@@ -70,22 +75,35 @@
             <div class="container">
               <form class="form-horizontal">
                 <div class="form-group">
+                  <label class="control-label col-sm-2" for="Name">Brand</label>
+                  <div class="col-sm-3">
+                  <select id="brand" name="Brand" class="form-control" ng-model ="newCar.brand.id">
+                      <option value="" disabled selected>Please Select</option>
+                      <option ng:repeat="brand in brands" value="{[{brand.id}]}">
+                          {[{brand.name}]}
+                      </option>
+                  </select>
+                    <!-- <input class="form-control" type="text" placeholder="Enter Car Name" ng-model="newCar.name"/> -->
+                  </div>
+                </div>
+              <form class="form-horizontal">
+                <div class="form-group">
                   <label class="control-label col-sm-2" for="Name">Name</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Enter Car Name" ng-model="newUser.name"/>
+                    <input class="form-control" type="text" placeholder="Enter Car Name" ng-model="newCar.name"/>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="full name">Max Speed</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Enter Top Speed" ng-model="newUser.fullname"/>
+                    <input class="form-control" type="text" placeholder="Enter Top Speed" ng-model="newCar.maxSpeed"/>
                   </div>
                 </div>
               </form>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success" type="button" ng-click="saveUser()" data-dismiss="modal">Save</button>
+            <button class="btn btn-success" type="button" ng-click="saveCar()" data-dismiss="modal">Save</button>
             <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -106,20 +124,20 @@
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="Name">Name</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" ng-model="clickedUser.name"/>
+                    <input class="form-control" type="text" ng-model="clickedCar.name"/>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="full name">Max Speed</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" ng-model="clickedUser.fullname"/>
+                    <input class="form-control" type="text" ng-model="clickedCar.maxSpeed"/>
                   </div>
                 </div>
               </form>
             </div>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-success" type="button" ng-click="updateUser()" data-dismiss="modal">Save</button>
+            <button class="btn btn-success" type="button" ng-click="updateCar()" data-dismiss="modal">Save</button>
             <button class="btn btn-default" type="button" data-dismiss="modal">Close</button>
           </div>
         </div>
@@ -135,61 +153,121 @@
             <h4 class="modal-title">Delete</h4>
           </div>
           <div class="modal-body">
-            <h3>Are you sure to delete <span>{[{clickedUser.fullname}]}</span>????</h3>
+            <h3>Are you sure to delete <span>{[{clickedCar.name}]}</span>?</h3>
           </div>
           <div class="modal-footer">
-            <button class="btn btn-danger" type="button" ng-click="deleteUser()" data-dismiss="modal">Yes</button>
+            <button class="btn btn-danger" type="button" ng-click="deleteCar()" data-dismiss="modal">Yes</button>
             <button class="btn btn-primary" type="button" data-dismiss="modal">No</button>
           </div>
         </div>
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.1.1/jquery.min.js" type="text/javascript"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/underscore.js/1.8.3/underscore-min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" type="text/javascript"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-animate.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
+    <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.5.1/restangular.min.js"></script>
     <script type="text/javascript">
-      var myApp = angular.module('myApp', []);
-myApp.config(function($interpolateProvider){
+      var myApp = angular.module('myApp', ['restangular']);
+  myApp.config(function($interpolateProvider){
       $interpolateProvider.startSymbol("{[{").endSymbol("}]}");
-    });
-myApp.controller("myController", function($scope){
-    
-    $scope.newUser = {};
-    $scope.clickedUser = {};
+    })
+    .config(function(RestangularProvider) {
+      RestangularProvider.setBaseUrl('http://mouf.dev'); 
+      RestangularProvider.setDefaultHeaders({
+        "Content-Type": "application/json",
+        "X-Requested-With": "XMLHttpRequest"
+      });
+      RestangularProvider.addResponseInterceptor(function(data, operation, what, url, response, deferred) {
+          var extractedData;
+          if (operation === 'getList') {
+            extractedData = data.data;
+          }else {
+            extractedData = data.data;
+          }
+          return extractedData;
+      });      
+
+});
+myApp.controller("myController", function($scope, Restangular){
+    var baseCars = Restangular.all('cars');    
+    var baseBrands = Restangular.all('brand');    
+    function cars_init() {
+      baseCars.getList()
+      .then(function(data) {
+        $scope.cars = data;
+        // console.log($scope.cars);
+      });
+    }
+
+    function brands_init() {
+      baseBrands.getList()
+      .then(function(data) {
+        $scope.brands = data;
+        // console.log($scope.brands);
+      });
+    }
+
+    cars_init();
+    brands_init();
+
+    $scope.newCar = {};
+    $scope.clickedCar = {};
     $scope.alertMassege = "";
+
     
-    
-    $scope.users = [
-      
-        {name : "Rashed", fullname : "Shuvro Nil", email : "rashed@mail.com"},
-        {name : "Javad", fullname : "Nazmul Hossian", email : "nazmul@mail.com"},
-        {name : "Lizu", fullname : "Sumona Sharmin", email : "lizu@mail.com"},
-               
-    ];
-    
-    
-    $scope.saveUser = function(){    
-        $scope.users.push($scope.newUser);
-        $scope.newUser = {};
+    $scope.saveCar = function(){
+        console.log($scope.newCar);
+        $scope.newCar.brand = $scope.brands.find(function(brand) {
+          return brand.id == $scope.newCar.brand.id;
+        })
+        $scope.cars.push($scope.newCar);
+        baseCars.post($scope.newCar).then(function() {
+            console.log("Object saved OK");
+          }, function() {
+            console.log("There was an error saving");
+          });        
+        $scope.newCar = {};
         
         $scope.alertMassege = "New item add on list successfully!!";
     };
     
     
-    $scope.selectUser = function(user){
-        console.log(user);
-        $scope.clickedUser = user;
+    $scope.selectCar = function(car){
+        // console.log(car);
+        $scope.clickedCar = car;
     };
     
-    $scope.updateUser = function (){
+    $scope.updateCar = function (){
+        baseCars.getList().then(function(cars) {
+          // console.log($scope.clickedCar.id);
+          var selectedCar = cars.find(function(car) {
+            return car.id == $scope.clickedCar.id;
+          });
+          console.log(selectedCar);
+          selectedCar.name = $scope.clickedCar.name;
+          selectedCar.maxSpeed = $scope.clickedCar.maxSpeed;
+          selectedCar.put().then(function() {
+            console.log("Object updated ok");
+          });
+        })
         $scope.alertMassege = "Update Successfully!!";
     };
     
     
-    $scope.deleteUser = function(){
-        $scope.users.splice($scope.users.indexOf($scope.clickedUser), 1);
+    $scope.deleteCar = function(){
+        baseCars.getList().then(function(cars) {
+          // console.log($scope.clickedCar.id);
+          var selectedCar = cars.find(function(car) {
+            return car.id == $scope.clickedCar.id;
+          });
+          console.log(selectedCar);
+          // console.log(Object.getOwnPropertyNames(selectedCar))
+          selectedCar.customGET("delete");
+        })      
+        $scope.cars.splice($scope.cars.indexOf($scope.clickedCar), 1);
         $scope.alertMassege = "Deleted successfully!!";
     };
     
@@ -198,6 +276,7 @@ myApp.controller("myController", function($scope){
     };
     
 });
+    
     </script>
   </body>
 </html>

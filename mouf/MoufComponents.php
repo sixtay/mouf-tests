@@ -1685,6 +1685,51 @@ return $driver;
       ),
     ),
   ),
+  'sampleController' => 
+  array (
+    'class' => 'MoufTest\\Controllers\\SampleController',
+    'external' => false,
+    'weak' => false,
+    'constructor' => 
+    array (
+      0 => 
+      array (
+        'value' => 'psr.errorLogLogger',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      1 => 
+      array (
+        'value' => 'bootstrapTemplate',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      2 => 
+      array (
+        'value' => 'block.content',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+      3 => 
+      array (
+        'value' => 'daoFactory',
+        'parametertype' => 'object',
+        'type' => 'string',
+        'metadata' => 
+        array (
+        ),
+      ),
+    ),
+  ),
   'sessionManager' => 
   array (
     'class' => 'Mouf\\Utils\\Session\\SessionManager\\DefaultSessionManager',
@@ -2475,6 +2520,13 @@ return rtrim(sys_get_temp_dir(), '/\\').'/mouftwigtemplatemain_'.$posixGetuid.st
 	 */
 	 public static function getWhoopsMiddleware() {
 	 	return MoufManager::getMoufManager()->get('whoopsMiddleware');
+	 }
+
+	/**
+	 * @return MoufTest\Controllers\SampleController
+	 */
+	 public static function getSampleController() {
+	 	return MoufManager::getMoufManager()->get('sampleController');
 	 }
 
 }

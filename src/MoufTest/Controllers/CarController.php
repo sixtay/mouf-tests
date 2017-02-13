@@ -1,19 +1,21 @@
 <?php
 namespace MoufTest\Controllers;
 
+use MoufTest\Model\Bean\CarBean;
+use MoufTest\Model\Dao\Generated\DaoFactory;
+use Mouf\Html\HtmlElement\HtmlBlock;
+use Mouf\Html\Renderer\Twig\TwigTemplate;
+use Mouf\Html\Template\TemplateInterface;
+use Mouf\Mvc\Splash\Annotations\Delete;
 use Mouf\Mvc\Splash\Annotations\Get;
 use Mouf\Mvc\Splash\Annotations\Post;
 use Mouf\Mvc\Splash\Annotations\Put;
-use Mouf\Mvc\Splash\Annotations\Delete;
 use Mouf\Mvc\Splash\Annotations\URL;
-use Mouf\Html\Template\TemplateInterface;
-use Mouf\Html\HtmlElement\HtmlBlock;
-use Psr\Log\LoggerInterface;
-use MoufTest\Model\Dao\Generated\DaoFactory;
-use \Twig_Environment;
-use Mouf\Html\Renderer\Twig\TwigTemplate;
-use Zend\Diactoros\Response\RedirectResponse;
 use Mouf\Mvc\Splash\HtmlResponse;
+use Psr\Log\LoggerInterface;
+use Zend\Diactoros\Response\JsonResponse;
+use Zend\Diactoros\Response\RedirectResponse;
+use \Twig_Environment;
 
 /**
  * TODO: write controller comment
@@ -73,8 +75,24 @@ class CarController {
      */
     public function index() {
         // TODO: write content of action here
+        //By default, we assume that it is not
+        $carDao = \Mouf::getCarDao();
+        $cars = $carDao->findAll();
+        //an AJAX request.
+        $isAjaxRequest = false;
+         
+        if(
+            isset($_SERVER['HTTP_X_REQUESTED_WITH']) &&
+            strcasecmp($_SERVER['HTTP_X_REQUESTED_WITH'], 'xmlhttprequest') == 0
+        ){
+            $isAjaxRequest = true;
+        }        
 
-        // Let's add the twig file to the template.
+        if ($isAjaxRequest) {
+            return new JsonResponse([ "status"=>"ok", "data" => $cars]);
+        }
+            // return new JsonResponse([ "status"=>"ok", "data" => json_decode(json_encode($cars))]);
+
         $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/index.twig', array("message"=>"Chuka")));
 
         return new HtmlResponse($this->template);
@@ -99,8 +117,7 @@ class CarController {
      * @param int $id
      */
     public function edit($id) {
-        // TODO: write content of action here
-
+        // TODO: write content of action here        
         // Let's add the twig file to the template.
         $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/edit.twig', array("message"=>"world")));
 
@@ -113,8 +130,9 @@ class CarController {
      */
     public function show($id) {
         // TODO: write content of action here
-
-        // Let's add the twig file to the template.
+        
+        // $brandBean = \Mouf::getBrandDao()->findById($_)
+        // Check if ajax call
         $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/show.twig', array("message"=>"world")));
 
         return new HtmlResponse($this->template);
@@ -126,6 +144,10 @@ class CarController {
      */
     public function store() {
         // TODO: write content of action here
+        $requestBody = json_decode(file_get_contents('php://input'));
+        $brandBean = \Mouf::getBrandDao()->getById($requestBody->brand->id);
+        $carBean = new CarBean($brandBean, $requestBody->name, $requestBody->maxSpeed);
+        \Mouf::getCarDao()->save($carBean);
 
 
         return new RedirectResponse('cars');
@@ -137,10 +159,14 @@ class CarController {
      * @param int $id
      */
     public function update($id) {
+        $requestBody = json_decode(file_get_contents('php://input'));        
         // TODO: write content of action here
+        $carBean = \Mouf::getCarDao()->getById($id);
+        $carBean->setName($requestBody->name);
+        $carBean->setMaxSpeed($requestBody->maxSpeed);
+        \Mouf::getCarDao()->save($carBean);
 
-
-        return new RedirectResponse('cars');
+        return new JsonResponse([ "status"=>"ok", "data" => $carBean]);
     }
     /**
      * @URL("cars/{id}/delete")
@@ -149,8 +175,8 @@ class CarController {
      */
     public function destroy($id) {
         // TODO: write content of action here
-
-
-        return new RedirectResponse('cars');
+        $carBean = \Mouf::getCarDao()->getById($id);
+        \Mouf::getCarDao()->delete($carBean);
+        return new JsonResponse([ "status"=>"ok", "data" => $carBean]);
     }
 }
