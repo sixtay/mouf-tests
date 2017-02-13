@@ -76,9 +76,6 @@ class CarController {
     public function index() {
         // TODO: write content of action here
         //By default, we assume that it is not
-        $base_url = "http://" . $_SERVER['SERVER_NAME'];
-        // var_dump($base_url); die();
-        // var_dump($_SERVER); die();
         $carDao = \Mouf::getCarDao();
         $cars = $carDao->findAll();
         //an AJAX request.
@@ -96,7 +93,7 @@ class CarController {
         }
             // return new JsonResponse([ "status"=>"ok", "data" => json_decode(json_encode($cars))]);
 
-        $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/index.twig', array("base_url" =>$base_url)));
+        $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/index.twig', array("base_url" => $this->server_url())));
 
         return new HtmlResponse($this->template);
     }
@@ -181,5 +178,23 @@ class CarController {
         $carBean = \Mouf::getCarDao()->getById($id);
         \Mouf::getCarDao()->delete($carBean);
         return new JsonResponse([ "status"=>"ok", "data" => $carBean]);
+    }
+
+    private function server_url()
+    {
+        $server_name = $_SERVER['SERVER_NAME'];
+
+        if (!in_array($_SERVER['SERVER_PORT'], [80, 443])) {
+            $port = ":$_SERVER[SERVER_PORT]";
+        } else {
+            $port = '';
+        }
+
+        if (!empty($_SERVER['HTTPS']) && (strtolower($_SERVER['HTTPS']) == 'on' || $_SERVER['HTTPS'] == '1')) {
+            $scheme = 'https';
+        } else {
+            $scheme = 'http';
+        }
+        return $scheme.'://'.$server_name.$port;
     }
 }
