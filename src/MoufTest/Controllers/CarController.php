@@ -76,7 +76,7 @@ class CarController {
     public function index() {
         // TODO: write content of action here
         //By default, we assume that it is not
-        $carDao = \Mouf::getCarDao();
+        $carDao = $this->daoFactory->getCarDao();
         $cars = $carDao->findAll();
         //an AJAX request.
         $isAjaxRequest = false;
@@ -131,7 +131,7 @@ class CarController {
     public function show($id) {
         // TODO: write content of action here
         
-        // $brandBean = \Mouf::getBrandDao()->findById($_)
+        // $brandBean = $this->daoFactory->getBrandDao()->findById($_)
         // Check if ajax call
         $this->content->addHtmlElement(new TwigTemplate($this->twig, 'views/car/show.twig', array("message"=>"world")));
 
@@ -145,9 +145,9 @@ class CarController {
     public function store() {
         // TODO: write content of action here
         $requestBody = json_decode(file_get_contents('php://input'));
-        $brandBean = \Mouf::getBrandDao()->getById($requestBody->brand->id);
+        $brandBean = $this->daoFactory->getBrandDao()->getById($requestBody->brand->id);
         $carBean = new CarBean($brandBean, $requestBody->name, $requestBody->maxSpeed);
-        \Mouf::getCarDao()->save($carBean);
+        $this->daoFactory->getCarDao()->save($carBean);
 
 
         return new RedirectResponse('cars');
@@ -161,10 +161,10 @@ class CarController {
     public function update($id) {
         $requestBody = json_decode(file_get_contents('php://input'));        
         // TODO: write content of action here
-        $carBean = \Mouf::getCarDao()->getById($id);
+        $carBean = $this->daoFactory->getCarDao()->getById($id);
         $carBean->setName($requestBody->name);
         $carBean->setMaxSpeed($requestBody->maxSpeed);
-        \Mouf::getCarDao()->save($carBean);
+        $this->daoFactory->getCarDao()->save($carBean);
 
         return new JsonResponse([ "status"=>"ok", "data" => $carBean]);
     }
@@ -175,8 +175,8 @@ class CarController {
      */
     public function destroy($id) {
         // TODO: write content of action here
-        $carBean = \Mouf::getCarDao()->getById($id);
-        \Mouf::getCarDao()->delete($carBean);
+        $carBean = $this->daoFactory->getCarDao()->getById($id);
+        $this->daoFactory->getCarDao()->delete($carBean);
         return new JsonResponse([ "status"=>"ok", "data" => $carBean]);
     }
 
