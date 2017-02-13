@@ -4,6 +4,7 @@
 <link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <style type="text/css">
     .myTable,.table th{text-align:center}*{margin:0;padding:0}@import url(https://fonts.googleapis.com/css?family=Exo);body{font-family:Exo,sans-serif}.myTable{margin-top:50px}.myAlert{margin:50px 0 0}.alert h4{margin:0}span{color:red}.footer{padding-top:235px}
+    .validation-valid{color: green !important}
   </style>
 </head>
   <body ng-app="myApp" ng-controller="myController">
@@ -93,13 +94,13 @@
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="Name">Name</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Enter Car Name" ng-model="newCar.name"/>
+                    <input class="form-control" type="text" placeholder="Enter Car Name" ng-model="newCar.name" validator="required"/>
                   </div>
                 </div>
                 <div class="form-group">
                   <label class="control-label col-sm-2" for="full name">Max Speed</label>
                   <div class="col-sm-3">
-                    <input class="form-control" type="text" placeholder="Enter Top Speed" ng-model="newCar.maxSpeed"/>
+                    <input class="form-control" type="text" placeholder="Enter Top Speed" ng-model="newCar.maxSpeed" validator="number"/>
                   </div>
                 </div>
               </form>
@@ -173,8 +174,10 @@
     <script src="https://ajax.googleapis.com/ajax/libs/angularjs/1.4.8/angular-aria.min.js"></script>
     <script type="text/javascript" src="http://cdnjs.cloudflare.com/ajax/libs/restangular/1.5.1/restangular.min.js"></script>
     <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/2.5.0/ui-bootstrap-tpls.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-validation/1.4.3/angular-validation.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/angular-validation/1.4.3/angular-validation-rule.min.js"></script>
     <script type="text/javascript">
-      var myApp = angular.module('myApp', ['restangular', 'ui.bootstrap']);
+      var myApp = angular.module('myApp', ['restangular', 'ui.bootstrap', 'validation', 'validation.rule']);
   myApp.config(function($interpolateProvider){
       $interpolateProvider.startSymbol("{[{").endSymbol("}]}");
     })
@@ -195,6 +198,19 @@
       });      
 
   })
+    .config(['$validationProvider', function($validationProvider) {
+      $validationProvider.setErrorHTML(function (msg) {
+       return  "<label class=\"control-label has-error\">" + msg + "</label>";
+      });
+      angular.extend($validationProvider, {
+        validCallback: function (element){
+            $(element).parents('.form-group:first').removeClass('has-error');
+        },
+        invalidCallback: function (element) {
+            $(element).parents('.form-group:first').addClass('has-error');
+        }
+      });      
+   }])
     .filter('searchFor', function(){
     return function(arr, searchString){
         if(!searchString){
@@ -203,10 +219,10 @@
         var result = [];
         searchString = searchString.toLowerCase();
         Restangular.all('cars').getList().then(function (data) {
-          angular.forEach(arr, function(item){
+          angular.forEach(data, function(item){
               if(item.title.toLowerCase().indexOf(searchString) !== -1){
-              result.push(item);
-          }
+                result.push(item);
+              }
           });          
         })
         return result;
